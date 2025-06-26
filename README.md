@@ -35,7 +35,7 @@ A powerful yet simple AI Assistant built with **Python (Flask)** and **OpenRoute
 
 ### 🤖 Summarize Text  
 > Write a Paragraph and choose Summarize text Option
-![Summarize Test](./screenshots/Summarize_Test.png)
+![Summarize Text](./screenshots/Summarize_Text.png)
 
 ### ✅ Creative Content  
 > Generate a creative using Creative Content option.  
