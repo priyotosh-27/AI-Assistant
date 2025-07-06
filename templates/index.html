@@ -2,10 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI Assistant</title>
+  <title>🧠 AI Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <h1>Welcome to Your AI Assistant 🤖</h1>
-  <p>Response: {{ response }}</p>
+  <div class="container">
+    <h1>🧠 Ask the AI Assistant</h1>
+
+    <form method="post">
+      <textarea name="user_input" placeholder="Type your question or request..." required></textarea>
+
+      <div class="actions">
+        <label><input type="radio" name="action" value="question" required> Answer a Question</label>
+        <label><input type="radio" name="action" value="summary"> Summarize Text</label>
+        <label><input type="radio" name="action" value="creative"> Creative Content</label>
+      </div>
+
+      <button type="submit">💬 Get Response</button>
+    </form>
+
+    {% if response %}
+      <div class="response">
+        <h2>🗨️ AI's Response:</h2>
+        <p>{{ response }}</p>
+
+        <form method="post">
+          <input type="hidden" name="user_input" value="{{ request.form['user_input'] }}">
+          <input type="hidden" name="action" value="{{ request.form['action'] }}">
+          <label>Was this helpful?</label><br>
+          <label><input type="radio" name="feedback" value="Yes"> Yes</label>
+          <label><input type="radio" name="feedback" value="No"> No</label>
+          <button type="submit">Submit Feedback</button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
 </body>
 </html>
