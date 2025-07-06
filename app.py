@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request
-from dotenv import load_dotenv
 import os
 import requests
 
-# Load API key from .env
-load_dotenv()
-api_key = os.getenv("OPENROUTER_API_KEY")
+# ✅ Load environment variables locally only
+if not os.environ.get("RENDER"):
+    from dotenv import load_dotenv
+    load_dotenv()
+
+# 🔐 API key from environment
+api_key = os.environ.get("OPENROUTER_API_KEY")
 
 app = Flask(__name__)
 
@@ -13,12 +16,12 @@ def get_ai_response(prompt):
     try:
         headers = {
             "Authorization": f"Bearer {api_key}",
-            "HTTP-Referer": "http://localhost:5000",
+            "HTTP-Referer": "http://localhost:5000",  # You can update this if needed
             "Content-Type": "application/json"
         }
 
         data = {
-            "model": "mistralai/mistral-7b-instruct",  # ✅ FREE, WORKING MODEL
+            "model": "mistralai/mistral-7b-instruct",
             "messages": [
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
@@ -28,7 +31,6 @@ def get_ai_response(prompt):
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
         result = response.json()
 
-        # Safe handling of response
         if "choices" in result:
             return result["choices"][0]["message"]["content"].strip()
         elif "error" in result:
@@ -45,7 +47,6 @@ def index():
         user_input = request.form["user_input"]
         action = request.form["action"]
 
-        # Define prompt type
         if action == "question":
             prompt = f"Answer this factual question: {user_input}"
         elif action == "summary":
@@ -55,10 +56,8 @@ def index():
         else:
             prompt = user_input
 
-        # Get response from OpenRouter
         ai_response = get_ai_response(prompt)
 
-        # Save feedback if provided
         feedback = request.form.get("feedback")
         if feedback:
             with open("feedback.txt", "a", encoding="utf-8") as f:
